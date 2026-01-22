@@ -42,7 +42,7 @@ This section addresses and satisfies that material.
 
 The commit history details who submitted which contributions.
 Chances are, though that some commits will involve contributions from more than one person
-(e.g., pair/mob programming on a single device.)
+(e.g., pair/mob programming on a single device).
 
 When <ins>**multiple people contribute**</ins> to a commit,
 a <ins>**comment**</ins> will be attached including the <ins>**names of any other involved contributor(s)**</ins>.
