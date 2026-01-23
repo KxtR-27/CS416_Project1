@@ -13,7 +13,7 @@ public class ConfigLoader {
 	private static final Gson GSON = new Gson();
 
 	// state will be updated in all public methods
-	@SuppressWarnings("FieldMayBeFinal" )
+	@SuppressWarnings("FieldMayBeFinal")
 	private static ConfigSingleton state = updateState();
 
 	private static ConfigSingleton updateState() {
@@ -22,24 +22,25 @@ public class ConfigLoader {
 			return GSON.fromJson(reader, ConfigSingleton.class);
 		}
 		catch (Exception e) {
-			System.err.printf("Config file not found.%n");
-
-			String extraMessage = switch (e) {
-				case JsonIOException _ -> "Unable to read config file.";
-				case JsonSyntaxException _ -> "Could not correctly parse config file.";
-				case FileNotFoundException _ -> "Config file not found.";
-				case IOException _ -> "Unexpected file-related issue occurred.";
-
-				default -> "";
-			};
+			String extraMessage = getExtraErrorMessage(e);
 
 			if (!extraMessage.isBlank())
 				System.err.printf("%s%n", extraMessage);
 
 			e.printStackTrace(System.err);
-
 			return state;
 		}
+	}
+
+	private static String getExtraErrorMessage(Exception e) {
+		return switch (e) {
+			case JsonIOException _ -> "Unable to read config file.";
+			case JsonSyntaxException _ -> "Could not correctly parse config file.";
+			case FileNotFoundException _ -> "Config file not found.";
+			case IOException _ -> "Unexpected file-related issue occurred.";
+
+			default -> "";
+		};
 	}
 
 	static void main() {

@@ -17,16 +17,16 @@ record ConfigSingleton(
 }
 
 record ConfigDevice(
-		String mac,
+		String id,
 		int port,
-		String ip,
+		String ipAddress,
 		String[] links
 ) {
 	@Override
 	public String toString() {
 		return String.format(
 				"%-2s | %s:%s | links: %s",
-				mac, ip, port, Arrays.toString(links)
+				id, ipAddress, port, Arrays.toString(links)
 		);
 	}
 }
