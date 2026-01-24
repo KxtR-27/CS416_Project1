@@ -2,6 +2,12 @@ package config;
 
 import java.util.Arrays;
 
+/**
+ * Stores configuration information for network devices.
+ * @param port
+ * @param ipAddress
+ * @param neighbors
+ */
 public record DeviceConfig(
 		int port,
 		String ipAddress,

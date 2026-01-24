@@ -11,10 +11,23 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handles loading and parsing of the configuration files.
+ * More Javadoc soon.
+ * @author Kat
+ */
 class ConfigParser {
 	private static final Gson GSON = new Gson();
 	private static Map<String, DeviceConfig> configMap;
 
+	/**
+	 * Returns an object with a port, IP address, and list of neighbors, in that order.
+	 * The only method you need to worry about.
+	 * Calling this method more than once effectively refreshes the config.
+	 * More Javadoc soon.
+	 * @author KxtR-27
+	 * @see DeviceConfig
+	 */
 	public static DeviceConfig getConfigForDevice(String id) {
 		updateConfigMap();
 		return configMap.get(id);
