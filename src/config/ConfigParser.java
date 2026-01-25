@@ -11,25 +11,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/// Parses device configurations from a `config.json` file in the same directory.
-/// _As a static utility class, this cannot be instanced._
+/// Parses and retrieves device configurations from a `config.json` file in the same directory.
 ///
-/// **_<u>If you are not a developer of this package, you only need to worry about `getConfigForDevice()`.</u>_**
-///
-/// The raw configuration loader uses Google Gson to read the `config.json` file.
-/// From there, loaded
-/// information is parsed into a `Map` (`Hashmap`), as maps are optimized for getting and setting operations,
-/// which is what this class is for.
-///
-/// Every call to a public method also refreshes the map, so any changes made to the `config.json` file will
-/// reflect immediately.
+/// **Unless you are a developer, you should <u>_only_</u> need to use the static
+/// `getConfigForDevice()` method.**
 ///
 /// @author KxtR-27 (Kat)
 /// @see #getConfigForDevice(String)
 /// @see DeviceConfig
 @SuppressWarnings("unused" /* because it's used later based on the rubric. */)
 class ConfigParser {
-	/// The Gson object used in conjunction with a reader to read data from the `config.json` file.
+	/// The Gson object used in conjunction with a JsonReader to read data from the `config.json` file.
 	private static final Gson GSON = new Gson();
 
 	/// A parsed map of keys (device IDs) and values (`DeviceConfig`s)
@@ -37,13 +29,16 @@ class ConfigParser {
 	private static final Map<String, DeviceConfig> CONFIGS_MAP = new HashMap<>(7);
 
 	/// Gets the configuration information for a virtual network device.
+	///
 	/// Calling this method also updates the parsed configuration,
 	/// so you can call this multiple times to pull potential changes to the config file.
 	///
 	/// @param id ID/"MAC" for a host or switch device in the virtual network, (ex. "S1" or "A")
 	///
 	/// @return a `DeviceConfig` object with the device's port, IP address, and neighbors,
-	/// 				_or **null** if no configuration exists for the ID._
+	/// 				_or **null** if no configuration exists for the ID used.<br>
+	/// 				<sup>If this method returns null, please ensure that the ID used
+	/// 				exists in the `config.json` file.</sup>_
 	///
 	/// @see DeviceConfig
 	@SuppressWarnings("unused" /* because it's used later on based upon the rubric.*/)
@@ -53,6 +48,7 @@ class ConfigParser {
 	}
 
 	/// Parses config file information into entries which are put into the config map.
+	///
 	/// Device IDs serve as keys, and the other device configuration information are encapsulated in the value.
 	/// This effectively "reloads" the `config.json` file and updates existing entries.
 	///
@@ -80,7 +76,7 @@ class ConfigParser {
 	/// Using a JsonReader from gson, converts the `config.json`
 	/// file's JSON structure into an effectively identical array of objects.
 	///
-	/// @return an array of `RawDeviceConfig`
+	/// @return an array of `RawDeviceConfig` objects
 	///
 	/// @see RawDeviceConfig
 	private static RawDeviceConfig[] loadConfigFile() {
@@ -113,11 +109,12 @@ class ConfigParser {
 		System.err.printf("%s%n", extraMessage);
 	}
 
-	/// Used internally to map the config.json file's contents to an object of effectively identical form.
-	/// A RawDeviceConfig is later used to create a map entry for a parsed configuration structure.
-	/// For usable information, use a DeviceConfig record instead.
+	/// Used internally to map the `config.json` file's contents to an object of effectively identical form.
 	///
-	/// This class provides no functionality aside from storing data in a record to be parsed later.
+	/// A `RawDeviceConfig` is later used to create a map entry for a parsed configuration structure.
+	/// For usable information, use a `DeviceConfig` record instead.
+	///
+	/// This class provides no functionality aside from storing data in a record to be parsed into a map.
 	///
 	/// @param id        The ID/"MAC" of a host or switch device
 	/// @param port      The port on which the host or switch operates
