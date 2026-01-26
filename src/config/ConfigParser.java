@@ -49,9 +49,6 @@ class ConfigParser {
 
 	/// Parses config file information into entries which are put into the config map.
 	///
-	/// Device IDs serve as keys, and the other device configuration information are encapsulated in the value.
-	/// This effectively "reloads" the `config.json` file and updates existing entries.
-	///
 	/// @see #loadConfigFile()
 	/// @see RawDeviceConfig
 	private static void updateConfigMap() {
@@ -73,8 +70,7 @@ class ConfigParser {
 			);
 	}
 
-	/// Using a JsonReader from gson, converts the `config.json`
-	/// file's JSON structure into an effectively identical array of objects.
+	/// Converts the `config.json` file into an effectively identical array of objects.
 	///
 	/// @return an array of `RawDeviceConfig` objects
 	///
@@ -90,8 +86,7 @@ class ConfigParser {
 		}
 	}
 
-	/// Prints a more human-readable indication of any error in `loadConfigFile()`, should an error occur.
-	/// Then prints the error stacktrace as well.
+	/// Prints the error with an additional help message.
 	///
 	/// @param e the caught exception to map to a message and print
 	///
@@ -110,11 +105,9 @@ class ConfigParser {
 	}
 
 	/// Used internally to map the `config.json` file's contents to an object of effectively identical form.
-	///
 	/// A `RawDeviceConfig` is later used to create a map entry for a parsed configuration structure.
-	/// For usable information, use a `DeviceConfig` record instead.
 	///
-	/// This class provides no functionality aside from storing data in a record to be parsed into a map.
+	/// For usable information, use a `DeviceConfig` record instead.
 	///
 	/// @param id        The ID/"MAC" of a host or switch device
 	/// @param port      The port on which the host or switch operates
