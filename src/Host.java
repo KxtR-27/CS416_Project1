@@ -52,9 +52,34 @@ public class Host {
         receiver.start();
     }
 
+    // handleFrame - Cam
+    // frame looks like SRC:DST:MSG
+    // break it up
+    // make sure it has 3 parts
+    // if for me -> show msg
+    // if not -> debug print
     private void handleFrame(String frame) {
 
+        String[] parts = frame.split(":");
+
+        if (parts.length < 3) {
+            System.out.println("Bad frame received: " + frame);
+            return;
+        }
+
+        String src = parts[0];
+        String dst = parts[1];
+        String msg = parts[2];
+
+
+        if (dst.equals(hostId)) {
+            System.out.println("Message from " + src + ": " + msg);
+        } else {
+            // flooded frame
+            System.out.println("Frame for " + dst + " received at " + hostId + " (MAC mismatch)");
+        }
     }
+
 
     public static void main(String[] args) throws Exception {
     }
