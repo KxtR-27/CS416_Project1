@@ -1,6 +1,8 @@
 package lan_switch;
 import config.ConfigParser;
 import config.DeviceConfig;
+import java.io.IOException;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class lan_switch {
     private final Map<String, Integer> switchTable = new HashMap<>();
     private final Map<Integer, DeviceConfig> virtualPorts = new HashMap<>();
 
-    private void create_switch_table(String sourceIP, int port){
+    private void create_and_update_switch_table(String sourceIP, int port){
         if(!switchTable.containsKey(sourceIP) || switchTable.get(sourceIP) != port){
             if (!switchTable.containsKey(sourceIP)) {
                 System.out.println("NEW HOST LEARNED: " + sourceIP + " on Port " + port);
@@ -20,14 +22,8 @@ public class lan_switch {
                 System.out.println("HOST MOVED: " + sourceIP + " moved to Port " + port);
             }
             switchTable.put(sourceIP, port);
-
             display_switch_table();
         }
-    }
-
-    private void update_switch_table(String sourceIP, int port){
-        System.out.println("Updating IP to: " + sourceIP + " to now port" + port);
-        switchTable.put(sourceIP, port);
     }
 
     public void display_switch_table(){
@@ -62,8 +58,41 @@ public class lan_switch {
             System.out.println("No Configuration found with " + id);
         }
     }
+    public void processPacket(String sourceIP, String destinationIP, String data, int incomingPort) throws IOException {
+        create_and_update_switch_table(sourceIP, incomingPort);
+        try (DatagramSocket hostSocket = new DatagramSocket()){
+            if(!switchTable.containsKey(destinationIP)){
+                System.out.println("FLOODING: Destination " + destinationIP + " unknown.");
+                for(DeviceConfig neighbor : virtualPorts.values()){
+                    if (neighbor.port() != incomingPort){
+                        sendUDP(hostSocket, destinationIP, neighbor.port(), data);
+                    }
+                }
+            }
+            else {
+                int targetPort = switchTable.get(destinationIP);
+                System.out.println("FORWARDING: Sending " + data + " to Port " + targetPort);
+                sendUDP(hostSocket, destinationIP, targetPort, data);
+            }
+        } catch (SocketException | UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    public static void main(String[] args) {
+    private void sendUDP(DatagramSocket socket, String ip, int port, String data) throws IOException {
+        byte[] buffer = data.getBytes();
+        DatagramPacket packet = new DatagramPacket(
+                buffer,
+                buffer.length,
+                InetAddress.getByName(ip),
+                port
+        );
+        socket.send(packet);
+    }
+
+
+
+    static void main(String[] args) {
         if (args.length > 0){
             try{
                 String inputID = args[0];
