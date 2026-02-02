@@ -12,9 +12,17 @@ public class Host {
 
     private DatagramSocket socket;
 
+    public Host(String hostId) throws Exception {
+        this.hostId = hostId;
+        config();
+        socket = new DatagramSocket(hostPort);
+        System.out.println("Host " + hostId + " started on " + hostIp + ":" + hostPort);
+        System.out.println("Connected to switch at " + switchIp + ":" + switchPort);
+    }
+
     public void config() {
         switchIp = "127.0.0.1";
-        int port = 3000;
+        switchPort = 3000;
         switch (hostId) {
             case "A" :
                 hostIp = "127.0.0.1";
@@ -34,7 +42,7 @@ public class Host {
                 break;
         }
     }
-    public void startReciever() {
+    public void startReceiver() {
         Thread receiver = new Thread(() -> {
             try {
                 byte[] buffer = new byte[1024];
@@ -80,7 +88,43 @@ public class Host {
         }
     }
 
+    private void startSender() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("Enter destination host ID: ");
+            String dst = scanner.nextLine().trim();
+
+            System.out.print("Enter message: ");
+            String msg = scanner.nextLine().trim();
+
+            String frame = hostId + ":" + dst + ":" + msg;
+            sendFrame(frame);
+        }
+    }
+
+    private void sendFrame(String frame) {
+        try {
+            byte[] data = frame.getBytes();
+            DatagramPacket packet = new DatagramPacket(
+                    data,
+                    data.length,
+                    InetAddress.getByName(switchIp),
+                    switchPort
+            );
+            socket.send(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start(){
+        startReceiver();
+        startSender();
+    }
+
 
     public static void main(String[] args) throws Exception {
+        Host host = new Host(args[0]);
+        host.start();
     }
 }
