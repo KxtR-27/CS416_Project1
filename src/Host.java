@@ -34,7 +34,7 @@ public class Host {
                 break;
         }
     }
-    public void startReceiver() {
+    public void startReciever() {
         Thread receiver = new Thread(() -> {
             try {
                 byte[] buffer = new byte[1024];
@@ -52,6 +52,12 @@ public class Host {
         receiver.start();
     }
 
+    // handleFrame - Cam
+    // frame looks like SRC:DST:MSG
+    // break it up
+    // make sure it has 3 parts
+    // if for me -> show msg
+    // if not -> debug print
     private void handleFrame(String frame) {
 
         String[] parts = frame.split(":");
@@ -69,31 +75,11 @@ public class Host {
         if (dst.equals(hostId)) {
             System.out.println("Message from " + src + ": " + msg);
         } else {
+            // flooded frame
             System.out.println("Frame for " + dst + " received at " + hostId + " (MAC mismatch)");
         }
     }
 
-    private void startSender() {
-        while (true) {
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Enter IP address and port: ");
-            String ipEntered = scan.nextLine().trim();
-
-            System.out.println("Enter message: ");
-            String messageEntered = scan.nextLine().trim();
-
-            String frame = hostId + ":" + ipEntered + ":" + messageEntered;
-            sendFrame(frame);
-        }
-    }
-
-    private void sendFrame(String frame) {
-
-    }
-
-    private void start() {
-
-    }
 
     public static void main(String[] args) throws Exception {
     }
