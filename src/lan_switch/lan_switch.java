@@ -79,6 +79,32 @@ public class lan_switch {
         }
     }
 
+    public void startListening() {
+        try (DatagramSocket socket = new DatagramSocket(this.listeningPort)) {
+            System.out.println("Switch " + id + " online on port " + listeningPort);
+            byte[] buffer = new byte[1024];
+
+            while (true) {
+                DatagramPacket p = new DatagramPacket(buffer, buffer.length);
+                socket.receive(p);
+
+                // Expecting -> "SRC:DEST:MSG"
+                String frame = new String(p.getData(), 0, p.getLength()).trim();
+                String[] parts = frame.split(":", 3);
+
+                if (parts.length == 3) {
+                    String src = parts[0];
+                    String dest = parts[1];
+                    String data = parts[2];
+                    int incomingPort = p.getPort();
+                    processPacket(src, dest, data, incomingPort);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendUDP(DatagramSocket socket, String ip, int port, String data) throws IOException {
         byte[] buffer = data.getBytes();
         DatagramPacket packet = new DatagramPacket(
@@ -98,6 +124,7 @@ public class lan_switch {
                 String inputID = args[0];
                 lan_switch lanSwitch = new lan_switch(inputID);
                 lanSwitch.display_switch_table();
+                lanSwitch.startListening();
             }
             catch (NumberFormatException e){
                 System.err.println("Argument Must Be Device ID");
