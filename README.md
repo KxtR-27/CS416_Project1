@@ -4,20 +4,6 @@
 
 ---
 
-## Tasks
-
-Three main tasks were given for this project.
-The following table details those tasks as assigned amongst the group.
-It is still possible that team members may contribute to tasks other than their assignment.
-
-| Task                             | Assignee 1                                               | Assignee 2                                         |
-|----------------------------------|----------------------------------------------------------|----------------------------------------------------|
-| 1. Creating config file & parser | [**`@KxtR-27`**](https://github.com/KxtR-27)             | ...                                                |
-| 2. Creating host program         | [**`@CamWise17`**](https://github.com/CamWise17)         | [**`@KSanders04`**](https://github.com/KSanders04) |
-| 3. Creating switch program       | [**`@timothygulley`**](https://github.com/timothygulley) | [**`@BroD-Prod`**](https://github.com/BroD-Prod)   |
-
----
-
 ## Submission Note
 
 According to the rubric, the project submission materials include...
@@ -57,14 +43,15 @@ This section addresses and satisfies that material.
 
 ### Contributions
 
-The commit history details who submitted which contributions.
-Chances are, though that some commits will involve contributions from more than one person
-(e.g., pair/mob programming on a single device).
+Three main tasks were given for this project.
+The following table details those tasks as assigned amongst the group.
+It is still possible that team members may contribute to tasks other than their assignment.
 
-When <ins>**multiple people contribute**</ins> to a commit,
-a <ins>**comment**</ins> will be attached including the <ins>**names of any other involved contributor(s)**</ins>.
-
-_Ahead of submission, a table will be added that summarizes each group member's contributions._
+| Task                             | Assignee 1                                               | Assignee 2                                         |
+|----------------------------------|----------------------------------------------------------|----------------------------------------------------|
+| 1. Creating config file & parser | [**`@KxtR-27`**](https://github.com/KxtR-27)             | ...                                                |
+| 2. Creating host program         | [**`@CamWise17`**](https://github.com/CamWise17)         | [**`@KSanders04`**](https://github.com/KSanders04) |
+| 3. Creating switch program       | [**`@timothygulley`**](https://github.com/timothygulley) | [**`@BroD-Prod`**](https://github.com/BroD-Prod)   |
 
 ---
 
