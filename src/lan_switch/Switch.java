@@ -10,10 +10,8 @@ import java.util.Map;
 
 public class Switch {
     private final String id;
-    private String ipAddress;
-    private int listeningPort;
-    private final Map<String, DeviceConfig> neighborConfigs = new HashMap<>();
-    private final Map<String, Integer> switchTable = new HashMap<>();
+	private int listeningPort;
+	private final Map<String, Integer> switchTable = new HashMap<>();
     private final Map<Integer, DeviceConfig> virtualPorts = new HashMap<>();
 
     private void create_and_update_switch_table(String sourceIP, int port){
@@ -43,8 +41,7 @@ public class Switch {
         this.id = id;
         DeviceConfig myConfig = ConfigParser.getConfigForDevice(id);
         if(myConfig != null){
-            this.ipAddress = myConfig.ipAddress();
-            this.listeningPort = myConfig.port();
+			this.listeningPort = myConfig.port();
             System.out.println("Config loaded for " + id);
             String[] neighbors = myConfig.neighbors();
             for(int i = 0; i < neighbors.length; i ++){
@@ -52,7 +49,6 @@ public class Switch {
                 if (neighborConfig != null){
                     int portNum = i + 1;
                     virtualPorts.put(portNum, neighborConfig);
-                    neighborConfigs.put(neighbors[i], neighborConfig);
                 }
             }
         }
@@ -86,6 +82,8 @@ public class Switch {
             System.out.println("Switch " + id + " online on port " + listeningPort);
             byte[] buffer = new byte[1024];
 
+            // loop is manually interrupted
+            //noinspection InfiniteLoopStatement
             while (true) {
                 DatagramPacket p = new DatagramPacket(buffer, buffer.length);
                 socket.receive(p);
@@ -103,7 +101,7 @@ public class Switch {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
