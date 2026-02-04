@@ -68,13 +68,13 @@ public class Switch {
             }
             else {
                 int targetPort = switchTable.get(destinationIP);
-                DeviceConfig target = virtualPorts.get(targetPort);
-                if (target != null) {
+                DeviceConfig targetDevice = virtualPorts.get(targetPort);
+                if (targetDevice != null) {
                     System.out.println("FORWARDING: Sending " + data + " to Port " + targetPort);
-                    sendUDP(hostSocket, target.ipAddress(), targetPort, data);
+                    sendUDP(hostSocket, targetDevice.ipAddress(), targetPort, data);
                 }
                 else {
-                    System.err.println("Port \" + targetPort + \" has no associated DeviceConfig.");
+                    System.err.println("Port " + targetPort + " has no associated DeviceConfig.");
                 }
             }
         } catch (SocketException | UnknownHostException e) {
