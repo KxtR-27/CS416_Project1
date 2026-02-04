@@ -10,14 +10,14 @@ import java.util.Scanner;
 
 public class Host {
 
-    private String hostId;
+    private final String hostId;
     private String hostIp;
     private int hostPort;
 
     private String switchIp;
     private int switchPort;
 
-    private DatagramSocket socket;
+    private final DatagramSocket socket;
 
     public Host(String hostId) throws Exception {
         this.hostId = hostId;
@@ -100,7 +100,9 @@ public class Host {
 
     private void startSender() {
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        // loop is manually interrupted
+		//noinspection InfiniteLoopStatement
+		while (true) {
             System.out.print("Enter destination host ID: ");
             String dst = scanner.nextLine().trim();
 
@@ -123,7 +125,7 @@ public class Host {
             );
             socket.send(packet);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -133,7 +135,7 @@ public class Host {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.out.println("Usage: java lan_host.Host <HOST_ID>");
             return;
