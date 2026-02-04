@@ -1,7 +1,11 @@
+package lan_host;
+
 import config.ConfigParser;
 import config.DeviceConfig;
 
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Scanner;
 
 public class Host {
@@ -19,7 +23,7 @@ public class Host {
         this.hostId = hostId;
         Config();
         socket = new DatagramSocket(hostPort);
-        System.out.println("Host " + hostId + " started on " + hostIp + ":" + hostPort);
+        System.out.println("lan_host.Host " + hostId + " started on " + hostIp + ":" + hostPort);
         System.out.println("Connected to switch at " + switchIp + ":" + switchPort);
     }
 
@@ -34,7 +38,7 @@ public class Host {
 
         String[] neighbors = deviceConfig.neighbors();
         if (neighbors.length == 0) {
-            throw new RuntimeException("Host has no neighbors in config");
+            throw new RuntimeException("lan_host.Host has no neighbors in config");
         }
 
         String switchId = neighbors[0];
@@ -131,7 +135,7 @@ public class Host {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            System.out.println("Usage: java Host <HOST_ID>");
+            System.out.println("Usage: java lan_host.Host <HOST_ID>");
             return;
         }
         Host host = new Host(args[0]);

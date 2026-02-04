@@ -1,12 +1,14 @@
 package lan_switch;
+
 import config.ConfigParser;
 import config.DeviceConfig;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class lan_switch {
+public class Switch {
     private final String id;
     private String ipAddress;
     private int listeningPort;
@@ -37,7 +39,7 @@ public class lan_switch {
         System.out.println("===========================================\n");
     }
 
-    public lan_switch(String id){
+    public Switch(String id){
         this.id = id;
         DeviceConfig myConfig = ConfigParser.getConfigForDevice(id);
         if(myConfig != null){
@@ -122,7 +124,7 @@ public class lan_switch {
         if (args.length > 0){
             try{
                 String inputID = args[0];
-                lan_switch lanSwitch = new lan_switch(inputID);
+                Switch lanSwitch = new Switch(inputID);
                 lanSwitch.display_switch_table();
                 lanSwitch.startListening();
             }
