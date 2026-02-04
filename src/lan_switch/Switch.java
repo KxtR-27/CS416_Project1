@@ -44,11 +44,10 @@ public class Switch {
 			this.listeningPort = myConfig.port();
             System.out.println("Config loaded for " + id);
             String[] neighbors = myConfig.neighbors();
-            for(int i = 0; i < neighbors.length; i ++){
-                DeviceConfig neighborConfig = ConfigParser.getConfigForDevice(neighbors[i]);
-                if (neighborConfig != null){
-                    int portNum = i + 1;
-                    virtualPorts.put(portNum, neighborConfig);
+            for (String neighbor : neighbors) {
+                DeviceConfig neighborConfig = ConfigParser.getConfigForDevice(neighbor);
+                if (neighborConfig != null) {
+                    virtualPorts.put(neighborConfig.port(), neighborConfig);
                 }
             }
         }
@@ -69,8 +68,14 @@ public class Switch {
             }
             else {
                 int targetPort = switchTable.get(destinationIP);
-                System.out.println("FORWARDING: Sending " + data + " to Port " + targetPort);
-                sendUDP(hostSocket, destinationIP, targetPort, data);
+                DeviceConfig target = virtualPorts.get(targetPort);
+                if (target != null) {
+                    System.out.println("FORWARDING: Sending " + data + " to Port " + targetPort);
+                    sendUDP(hostSocket, target.ipAddress(), targetPort, data);
+                }
+                else {
+                    System.err.println("Port \" + targetPort + \" has no associated DeviceConfig.");
+                }
             }
         } catch (SocketException | UnknownHostException e) {
             throw new RuntimeException(e);
