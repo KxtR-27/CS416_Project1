@@ -52,6 +52,9 @@ This section addresses and satisfies that material.
 - **<ins>Monday, 2/2/2026</ins> <kbd>in-class</kbd>**
     - **Attendees:** Tim, Brody, Kat, Kyle, Camryn
 
+- **<ins>Wednesday, 2/4/2026</ins> <kbd>in-class</kbd>**
+    - **Attendees:** Tim, Brody, Kat, Kyle, Camryn
+
 ### Contributions
 
 The commit history details who submitted which contributions.
