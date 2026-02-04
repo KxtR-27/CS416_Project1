@@ -1,3 +1,6 @@
+import config.ConfigParser;
+import config.DeviceConfig;
+
 import java.net.*;
 import java.util.Scanner;
 
@@ -14,34 +17,37 @@ public class Host {
 
     public Host(String hostId) throws Exception {
         this.hostId = hostId;
-        config();
+        Config();
         socket = new DatagramSocket(hostPort);
         System.out.println("Host " + hostId + " started on " + hostIp + ":" + hostPort);
         System.out.println("Connected to switch at " + switchIp + ":" + switchPort);
     }
 
-    public void config() {
-        switchIp = "127.0.0.1";
-        switchPort = 3000;
-        switch (hostId) {
-            case "A" :
-                hostIp = "127.0.0.1";
-                hostPort = 5001;
-                break;
-            case "B" :
-                hostIp = "127.0.0.1";
-                hostPort = 5002;
-                break;
-            case "C":
-                hostIp = "127.0.0.1";
-                hostPort = 5003;
-                break;
-            case "D":
-                hostIp = "127.0.0.1";
-                hostPort = 5004;
-                break;
+    private void Config() {
+        DeviceConfig deviceConfig = ConfigParser.getConfigForDevice(hostId);
+        if (deviceConfig == null) {
+            throw new RuntimeException("No config found for host " + hostId);
         }
+
+        hostIp = deviceConfig.ipAddress();
+        hostPort = deviceConfig.port();
+
+        String[] neighbors = deviceConfig.neighbors();
+        if (neighbors.length == 0) {
+            throw new RuntimeException("Host has no neighbors in config");
+        }
+
+        String switchId = neighbors[0];
+
+        DeviceConfig switchConfig = ConfigParser.getConfigForDevice(switchId);
+        if (switchConfig == null) {
+            throw new RuntimeException("No config found for switch " + switchId);
+        }
+
+        switchIp = switchConfig.ipAddress();
+        switchPort = switchConfig.port();
     }
+
     public void startReceiver() {
         Thread receiver = new Thread(() -> {
             try {
@@ -124,6 +130,10 @@ public class Host {
 
 
     public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            System.out.println("Usage: java Host <HOST_ID>");
+            return;
+        }
         Host host = new Host(args[0]);
         host.start();
     }
